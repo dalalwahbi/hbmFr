@@ -5,6 +5,7 @@ import tw from "twin.macro";
  */
 import { motion } from "framer-motion";
 import useInView from "./useInView";
+import Light from "components/headers/light";
 
 const StyledDiv = tw.div`font-display min-h-screen text-secondary-500 p-8 overflow-hidden`;
 function AnimationReveal({ disabled, children }) {
@@ -47,6 +48,7 @@ function AnimatedSlideInComponent({ direction = "left", offset = 30, children })
       >
         {children}
       </motion.section>
+
     </div>
   );
 }
