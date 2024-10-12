@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
-import { css } from "styled-components/macro"; //eslint-disable-line
 import { Container, ContentWithPaddingXl } from "components/misc/Layouts.js";
 import { SectionHeading } from "components/misc/Headings.js";
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 import { ReactComponent as StarIcon } from "images/star-icon.svg";
 import { ReactComponent as SvgDecoratorBlob1 } from "images/svg-decorator-blob-5.svg";
 import { ReactComponent as SvgDecoratorBlob2 } from "images/svg-decorator-blob-7.svg";
+// import TabCardGrid2 from "./TabCardGrid2";
 
 const HeaderRow = tw.div`flex justify-between items-center flex-col xl:flex-row`;
 const Header = tw(SectionHeading)``;
@@ -26,7 +26,7 @@ const TabContent = tw(motion.div)`mt-6 flex flex-wrap sm:-mr-10 md:-mr-6 lg:-mr-
 const CardContainer = tw.div`mt-10 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 sm:pr-10 md:pr-6 lg:pr-12`;
 const Card = tw(motion.a)`bg-gray-200 rounded-b block max-w-xs mx-auto sm:max-w-none sm:mx-0`;
 const CardImageContainer = styled.div`
-  ${props => css`background-image: url("${props.imageSrc}");`}
+  background-image: url("${props => props.imageSrc}");
   ${tw`h-56 xl:h-64 bg-center bg-cover relative rounded-t`}
 `;
 const CardRatingContainer = tw.div`leading-none absolute inline-flex bg-gray-100 bottom-0 left-0 ml-4 mb-4 rounded-full px-5 py-2 items-end`;
@@ -57,9 +57,9 @@ const DecoratorBlob2 = styled(SvgDecoratorBlob2)`
   ${tw`pointer-events-none -z-20 absolute left-0 bottom-0 h-80 w-80 opacity-15 transform -translate-x-2/3 text-primary-500`}
 `;
 
-export default ({ heading = "Checkout the Menu" }) => {
+const TabCardGrid = ({ heading = "Checkout the Menu" }) => {
   const [products, setProducts] = useState([]);
-
+  
   useEffect(() => {
     // Fetch products from API
     fetch("http://127.0.0.1:8000/api/products")
@@ -67,16 +67,16 @@ export default ({ heading = "Checkout the Menu" }) => {
       .then(data => setProducts(data))
       .catch(error => console.error("Error fetching products:", error));
   }, []);
-
+  console.log("PRODUCT",products);
   const tabs = {
     Products: products.map(product => ({
-      imageSrc: product.image, // Assuming the API returns an image field
-      title: product.Name, // Assuming the API returns a name field
-      content: product.description, // Assuming the API returns a description field
-      price: `$${product.Price}`, // Assuming the API returns a price field
-      rating: product.rating || "4.5", // If no rating, provide default
-      reviews: product.reviews || "50", // If no reviews, provide default
-      url: "#"
+      imageSrc: `http://127.0.0.1:8000/storage/${product.image}`, // Prepend the base URL to the image path
+      title: product.Name,
+      content: product.description,
+      price: `$${parseFloat(product.Price).toFixed(2)}`, // Ensure the price is formatted correctly
+      rating: product.rating || "4.5",
+      reviews: product.reviews || "50",
+      url: "#" // Add a link if needed
     }))
   };
 
@@ -159,3 +159,5 @@ export default ({ heading = "Checkout the Menu" }) => {
     </Container>
   );
 };
+
+export default TabCardGrid;

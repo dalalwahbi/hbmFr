@@ -14,6 +14,7 @@ import Footer from "components/footers/FiveColumnWithInputForm.js";
 import chefIconImageSrc from "images/chef-icon.svg";
 import celebrationIconImageSrc from "images/celebration-icon.svg";
 import shopIconImageSrc from "images/shop-icon.svg";
+import TabCardGrid2 from "./cards/TabCardGrid2";
 
 export default () => {
   const Subheading = tw.span`tracking-wider text-sm font-medium`;
@@ -60,7 +61,14 @@ export default () => {
         imageDecoratorBlobCss={tw`left-1/2 -translate-x-1/2 md:w-32 md:h-32 opacity-25`}
       />
       {/* TabGrid Component also accepts a tabs prop to customize the tabs and its content directly. Please open the TabGrid component file to see the structure of the tabs props.*/}
-      <TabGrid
+      {/* <TabGrid
+        heading={
+          <>
+            Checkout our <HighlightedText>menu.</HighlightedText>
+          </>
+        }
+      /> */}
+            <TabCardGrid2
         heading={
           <>
             Checkout our <HighlightedText>menu.</HighlightedText>
