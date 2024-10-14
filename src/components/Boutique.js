@@ -3,8 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
+import AnimationRevealPage from "helpers/AnimationRevealPage.js";
 import axios from 'axios';
 import Light from './headers/light';
+import Footer from "components/footers/FiveColumnWithInputForm.js";
+import tw from "twin.macro";
+import { css } from "styled-components/macro"; //eslint-disable-line
 const Boutique = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -51,7 +55,10 @@ const Boutique = () => {
                         </div>                    </div>
                 ))}
             </div>
-        </div></>
+        </div>
+        <Footer />
+
+        </>
   
     );
 };

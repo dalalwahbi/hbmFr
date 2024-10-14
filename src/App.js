@@ -7,7 +7,12 @@ import TermsOfService from './components/TermsOfService.js';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Boutique from "components/Boutique.js";
 import './Boutique.css';
+import './ProductDetails.css';
+// index.js or App.js
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import ProductDetails from "components/ProductDetails.js";
+import CheckoutFrom from "components/CheckoutForm.js";
 
 export default function App() {
   return (
@@ -21,6 +26,7 @@ export default function App() {
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/Boutique" element={<Boutique />} />
           <Route path="/product-details/:id" element={<ProductDetails />} />
+          <Route path="/checkout" element={<CheckoutFrom/>} />
 
         </Routes>
       </Router>

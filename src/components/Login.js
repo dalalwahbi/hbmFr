@@ -88,7 +88,7 @@ const Login = ({
     e.preventDefault();
     setError("");   // Reset any previous error messages
     setLoading(true);  // Set loading state to true to show a loading indicator if needed
-
+  
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login",
@@ -102,12 +102,20 @@ const Login = ({
           },
         }
       );
-
+  
       if (response.status === 200 || response.status === 201) {
         console.log('Login successful:', response.data);
-        navigate("/");  // Redirect the user to the homepage
+  
+        // Extract the token from the response (assuming it's in response.data.token)
+        const token = response.data.token;
+  
+        // Store the token in localStorage
+        localStorage.setItem('authToken', token);
+  
+        // Redirect the user to the homepage
+        navigate("/");
       }
-
+  
     } catch (error) {
       if (error.response) {
         const serverError = error.response.data;
@@ -119,6 +127,7 @@ const Login = ({
       setLoading(false);
     }
   };
+  
 
   return (
     <AnimationRevealPage>
