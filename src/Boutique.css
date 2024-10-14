@@ -1,3 +1,4 @@
+/* Boutique.css */
 .boutique-container {
     padding: 20px;
     text-align: center;
@@ -21,32 +22,44 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures equal height */
 }
 
 .product-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    cursor: pointer; /* Indicate that the card is clickable */
 }
 
 .product-image {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Maintain aspect ratio and cover the area */
 }
 
 .product-name {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Updated for consistency */
     margin: 10px 0;
 }
 
 .product-description {
     color: #666;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    flex-grow: 1; /* Allows the description to take remaining space */
 }
 
 .product-price {
     font-size: 1.2rem;
     color: #333;
+    font-weight: bold;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Space between buttons */
 }
 
 .buy-button {
@@ -62,8 +75,8 @@
 .buy-button:hover {
     background-color: #5753d6;
 }
-/* ProductDetails.css */
 
+/* ProductDetails.css */
 .product-details {
     display: flex;
     flex-direction: column;
@@ -120,6 +133,7 @@
 .back-button:hover {
     background-color: #0056b3;
 }
+
 /* CheckoutForm.css */
 form {
     display: flex;

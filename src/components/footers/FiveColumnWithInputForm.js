@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { css } from "styled-components/macro"; //eslint-disable-line
 import { PrimaryButton as PrimaryButtonBase } from "components/misc/Buttons.js";
 
-import LogoImage from "images/logo.svg";
+import LogoImage from "images/hbm_logo-rm.png";
 import { ReactComponent as FacebookIcon } from "images/facebook-icon.svg";
 import { ReactComponent as TwitterIcon } from "images/twitter-icon.svg";
 import { ReactComponent as YoutubeIcon } from "images/youtube-icon.svg";
@@ -20,6 +20,7 @@ const ColumnHeading = tw.h5`uppercase font-bold`;
 const LinkList = tw.ul`mt-6 text-sm font-medium`;
 const LinkListItem = tw.li`mt-3`;
 const Link = tw.a`border-b-2 border-transparent hocus:border-gray-700 pb-1 transition duration-300`;
+const currentYear = new Date().getFullYear(); // Get the current year
 
 const SubscribeNewsletterColumn = tw(Column)`text-center lg:text-left w-full! lg:w-auto! mt-20 lg:mt-12`;
 const SubscribeNewsletterContainer = tw.div`max-w-sm mx-auto lg:mx-0 `;
@@ -52,23 +53,23 @@ export default () => {
       <Content>
         <SixColumns>
           <Column>
-            <ColumnHeading>Main</ColumnHeading>
+            <ColumnHeading>Principal</ColumnHeading>
             <LinkList>
               <LinkListItem>
-                <Link href="#">Blog</Link>
+                <Link href="/">Acceuil</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">FAQs</Link>
+                <Link href="/Boutique">Boutique</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">Support</Link>
+                <Link href="/conditions">Conditions d'utilisation</Link>
               </LinkListItem>
               <LinkListItem>
-                <Link href="#">About Us</Link>
+                <Link href="/contact_nous">Contact Nous</Link>
               </LinkListItem>
             </LinkList>
           </Column>
-          <Column>
+          {/* <Column>
             <ColumnHeading>Product</ColumnHeading>
             <LinkList>
               <LinkListItem>
@@ -84,8 +85,8 @@ export default () => {
                 <Link href="#">Team</Link>
               </LinkListItem>
             </LinkList>
-          </Column>
-          <Column>
+          </Column> */}
+          {/* <Column>
             <ColumnHeading>Press</ColumnHeading>
             <LinkList>
               <LinkListItem>
@@ -101,25 +102,25 @@ export default () => {
                 <Link href="#">Office</Link>
               </LinkListItem>
             </LinkList>
-          </Column>
+          </Column> */}
           <Column>
             <ColumnHeading>Legal</ColumnHeading>
             <LinkList>
-              <LinkListItem>
+              {/* <LinkListItem>
                 <Link href="#">GDPR</Link>
-              </LinkListItem>
+              </LinkListItem> */}
               <LinkListItem>
                 <Link href="#">Privacy Policy</Link>
               </LinkListItem>
               <LinkListItem>
                 <Link href="/terms-of-service">Terms of Service</Link>
               </LinkListItem>
-              <LinkListItem>
+              {/* <LinkListItem>
                 <Link href="#">Disclaimer</Link>
-              </LinkListItem>
+              </LinkListItem> */}
             </LinkList>
           </Column>
-          <SubscribeNewsletterColumn>
+          {/* <SubscribeNewsletterColumn>
             <SubscribeNewsletterContainer>
               <ColumnHeading>Subscribe to our Newsletter</ColumnHeading>
               <SubscribeText>
@@ -130,15 +131,15 @@ export default () => {
                 <SubscribeButton type="submit">Subscribe</SubscribeButton>
               </SubscribeForm>
             </SubscribeNewsletterContainer>
-          </SubscribeNewsletterColumn>
+          </SubscribeNewsletterColumn> */}
         </SixColumns>
         <Divider />
         <ThreeColRow>
           <LogoContainer>
             <LogoImg src={LogoImage} />
-            <LogoText>Treact Inc.</LogoText>
+            <LogoText>Hbm Digital</LogoText>
           </LogoContainer>
-          <CopywrightNotice>&copy; 2018 Treact Inc. All Rights Reserved.</CopywrightNotice>
+          <CopywrightNotice>&copy; {currentYear}  Created by <a href="https://agencywmg.com/">agencywmg</a>. All Rights Reserved.</CopywrightNotice>
           <SocialLinksContainer>
             <SocialLink href="https://facebook.com">
               <FacebookIcon />

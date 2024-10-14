@@ -9,7 +9,9 @@ import logo from "images/logo.svg";
 import googleIconImageSrc from "images/google-icon.png";
 import twitterIconImageSrc from "images/twitter-icon.png";
 import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
+
 import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
+
 import axios from 'axios';
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
 
@@ -76,7 +78,9 @@ const Login = ({
   SubmitButtonIcon = LoginIcon,
   tosUrl = "#",
   privacyPolicyUrl = "#",
-  signInUrl = "login"
+  signInUrl = "login",
+  forgotPasswordUrl = "#",
+
 }) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -86,33 +90,24 @@ const Login = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");   // Reset any previous error messages
-    setLoading(true);  // Set loading state to true to show a loading indicator if needed
+    setError("");
+    setLoading(true);
   
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login",
-        {
-          identifier,  // Send the identifier (username or email)
-          password,    // Send the password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json', // Set appropriate headers
-          },
-        }
+        { identifier, password },
+        { headers: { 'Content-Type': 'application/json' } }
       );
   
       if (response.status === 200 || response.status === 201) {
-        console.log('Login successful:', response.data);
-  
-        // Extract the token from the response (assuming it's in response.data.token)
-        const token = response.data.token;
-  
-        // Store the token in localStorage
+        const { token, user } = response.data; // Assuming user details are included in response
+        
+        // Store token and user info in localStorage
         localStorage.setItem('authToken', token);
+        localStorage.setItem('user', JSON.stringify(user)); // Storing user as JSON string
   
-        // Redirect the user to the homepage
+        // Redirect user to homepage
         navigate("/");
       }
   
@@ -127,6 +122,7 @@ const Login = ({
       setLoading(false);
     }
   };
+  
   
 
   return (
@@ -191,6 +187,11 @@ const Login = ({
                 Vous n'avez pas de compte ? 
               <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
               Inscrivez-vous
+                  </a>
+                </p>
+                <p tw="mt-6 text-xs text-gray-600 text-center">
+                  <a href="/forgot-password" tw="border-b border-gray-500 border-dotted">
+                    Mot de passe oublié ?
                   </a>
                 </p>
               </FormContainer>

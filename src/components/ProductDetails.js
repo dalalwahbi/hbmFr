@@ -69,6 +69,9 @@ const ProductDetails = () => {
             // Add new product to cart
             existingCart.push({
                 productID: product.ProductID,
+                productName: product.Name,
+                productImage:product.image,
+                productPrice:product.Price,
                 quantity: quantity
             });
         }
@@ -127,7 +130,7 @@ const ProductDetails = () => {
                 <div className="related-products-grid">
                     {relatedProducts.length > 0 ? (
                         relatedProducts.map((relatedProduct) => (
-                            <div key={relatedProduct.id} className="related-product-card">
+                            <div key={relatedProduct.ProductID} className="related-product-card">
                                 <Link to={`/product-details/${relatedProduct.id}`}>
                                     <img src={`http://127.0.0.1:8000/storage/${relatedProduct.image}`} alt={relatedProduct.name} className="related-product-image" />
                                     <p className="related-product-name">{relatedProduct.Name}</p>

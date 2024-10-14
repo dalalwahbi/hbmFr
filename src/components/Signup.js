@@ -158,11 +158,11 @@ const Signup = ({
                     Privacy Policy
                   </a>
                 </p>
-                <p tw="mt-6 text-xs text-gray-600 text-center">
+                {/* <p tw="mt-6 text-xs text-gray-600 text-center">
                   <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
                     Mot de passe oublié ?
                   </a>
-                </p>
+                </p> */}
                 <p tw="mt-8 text-sm text-gray-600 text-center">
                   Avez-vous un compte ?{" "}
                   <a href={signupUrl} tw="border-b border-gray-500 border-dotted">
