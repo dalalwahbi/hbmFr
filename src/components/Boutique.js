@@ -1,61 +1,75 @@
-// Boutique.js
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
-import AnimationRevealPage from "helpers/AnimationRevealPage.js";
-import axios from 'axios';
-import Light from './headers/light';
+import { faShoppingCart, faEye } from '@fortawesome/free-solid-svg-icons';
 import Footer from "components/footers/FiveColumnWithInputForm.js";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is imported
-import '../Boutique.css'; // Adjust the path according to your file structure
-
+import Light from './headers/light';
+import { useNavigate } from 'react-router-dom';
 const Boutique = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState(''); // State for selected category
+    const [products, setProducts] = useState([]); // State for storing products
+    const [cart, setCart] = useState([]); // State for managing the cart
+    const [selectedCategory, setSelectedCategory] = useState('');
     const navigate = useNavigate(); // Initialize the useNavigate hook
-
+    // Fetch products when the component mounts
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/products'); // Change to your API endpoint
-                setProducts(response.data);
-            } catch (err) {
-                setError('Error fetching products');
-            } finally {
-                setLoading(false);
+                const response = await fetch(`http://127.0.0.1:8000/api/products`);
+                if (!response.ok) {
+                    throw new Error('Products not found');
+                }
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
             }
         };
 
         fetchProducts();
     }, []);
-    console.log(products);
-    // Filter products by selected category
-    const filteredProducts = selectedCategory 
-        ? products.filter(product => product.Category === selectedCategory) 
-        : products;
 
-    console.log("Products", products);
-    if (loading) return <div className="text-center">Loading...</div>;
-    if (error) return <div className="text-center text-danger">{error}</div>;
+    // Handle "Ajouter au panier" functionality
+    const handleAddToCart = (product) => {
+        const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const productInCart = existingCart.find(item => item.productID === product.ProductID);
+        
+        if (productInCart) {
+            // If the product already exists in the cart, increase its quantity
+            productInCart.quantity += 1;
+        } else {
+            // Add the product to the cart with an initial quantity of 1
+            existingCart.push({
+                productID: product.ProductID,
+                productName: product.Name,
+                productImage: product.image,
+                productPrice: product.Price,
+                quantity: 1
+            });
+        }
 
-    const viewProductDetails = (productId) => {
-        navigate(`/product-details/${productId}`); // Navigate to the product details page
+        // Save updated cart to localStorage and update cart state
+        localStorage.setItem('cart', JSON.stringify(existingCart));
+        setCart(existingCart);
+        alert('Produit ajouté au panier');
     };
 
+    // Filter products based on selected category
+    const filteredProducts = selectedCategory 
+        ? products.filter(product => product.Category === selectedCategory)
+        : products;
+    const viewProductDetails = (productId) => {
+            navigate(`/product-details/${productId}`); // Navigate to the product details page
+        };
     return (
-        <>
+        <div>
             <Light />
             <div className="container mt-5">
                 <h1 className="text-center mb-4">Checkout our menu.</h1>
 
                 {/* Category Filter */}
                 <div className="text-center mb-4">
-                    <button onClick={() => setSelectedCategory('')} className="btn btn-secondary m-1">All</button>
-                    <button onClick={() => setSelectedCategory('Cosmétique')} className="btn btn-secondary m-1">Cosmétique</button>
-                    <button onClick={() => setSelectedCategory('Produit alimentaire')} className="btn btn-secondary m-1">Produit Alimentaire</button>
+                    <button onClick={() => setSelectedCategory('')} className="btn m-1">All</button>
+                    <button onClick={() => setSelectedCategory('Cosmétique')} className="btn m-1">Cosmétique</button>
+                    <button onClick={() => setSelectedCategory('Produit alimentaire')} className="btn m-1">Produit Alimentaire</button>
                 </div>
 
                 <div className="row">
@@ -63,17 +77,23 @@ const Boutique = () => {
                         {filteredProducts.map((product) => (
                             <div key={product.ProductID} className="product-card">
                                 <img 
-                                    src={`http://127.0.0.1:8000/storage/${product.image}`} 
+                                    src={`${process.env.REACT_APP_API_URL}/storage/${product.image}`} 
                                     alt={product.Name} 
                                     className="product-image" 
                                 />
                                 <h2 className="product-name">{product.Name}</h2>
-                                <p className="product-description">{product.Description}</p>
+                                <p className="product-description">{product.description}</p>
                                 <p className="product-price">${product.Price}</p>
                                 <div className="button-container">
-                                    {/* <button className="buy-button">Buy Now</button> */}
-                                    <button className="view-button" onClick={() => viewProductDetails(product.ProductID)}>
-                                        details<FontAwesomeIcon icon={faEye} />
+                           
+
+                                    {/* Ajouter au Panier Button */}
+                                    <button className="cart-button btn" onClick={() => handleAddToCart(product)}>
+    Ajouter au panier <FontAwesomeIcon icon={faShoppingCart} />
+</button>
+                                             {/* View Details Button */}
+                                             <button className="view-button btn" onClick={() => viewProductDetails(product.ProductID)}>
+                                         <FontAwesomeIcon icon={faEye} />
                                     </button>
                                 </div>
                             </div>
@@ -82,7 +102,7 @@ const Boutique = () => {
                 </div>
             </div>
             <Footer />
-        </>
+        </div>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Light from './headers/light';
 
 const CheckoutForm = () => {
     const token = localStorage.getItem('authToken');
@@ -92,6 +93,8 @@ const CheckoutForm = () => {
     };
 
     return (
+        <div>
+            <Light />
         <div className="container">
             <div className="row">
                 <div className="col-xl-8">
@@ -130,7 +133,7 @@ const CheckoutForm = () => {
                                             </li>
                                         ))}
                                     </ul>
-
+                                    <br/><br/>
                                     <h2>Informations client</h2>
                                     <form onSubmit={handleSubmit}>
                                         <div className="mb-3">
@@ -213,6 +216,8 @@ const CheckoutForm = () => {
             </div>
             {/* end row */}
         </div>
+        </div>
+    
     );
 };
 

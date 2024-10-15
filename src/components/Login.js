@@ -7,13 +7,9 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 import illustration from "images/signup-illustration.svg";
 import logo from "images/logo.svg";
 import googleIconImageSrc from "images/google-icon.png";
-import twitterIconImageSrc from "images/twitter-icon.png";
-import { ReactComponent as SignUpIcon } from "feather-icons/dist/icons/user-plus.svg";
-
-import { useNavigate } from 'react-router-dom';  // Import useNavigate from react-router-dom
-
-import axios from 'axios';
 import { ReactComponent as LoginIcon } from "feather-icons/dist/icons/log-in.svg";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Container = tw(ContainerBase)`min-h-screen bg-primary-900 text-white font-medium flex justify-center -m-8`;
 const Content = tw.div`max-w-screen-xl m-0 sm:mx-20 sm:my-16 bg-white text-gray-900 shadow sm:rounded-lg flex justify-center flex-1`;
@@ -42,7 +38,12 @@ const DividerTextContainer = tw.div`my-12 border-b text-center relative`;
 const DividerText = tw.div`leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform -translate-y-1/2 absolute inset-x-0 top-1/2 bg-transparent`;
 
 const Form = tw.form`mx-auto max-w-xs`;
-const Input = tw.input`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`;
+const Input = styled.input`
+  ${tw`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5 first:mt-0`}
+  ${props => props.hasError && tw`border-red-500`}
+`;
+const ErrorMessage = tw.p`text-red-500 text-xs mt-1`;
+
 const SubmitButton = styled.button`
   ${tw`mt-5 tracking-wide font-semibold bg-primary-500 text-gray-100 w-full py-4 rounded-lg hover:bg-primary-900 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none`}
   .icon {
@@ -61,36 +62,23 @@ const IllustrationImage = styled.div`
 const Login = ({
   logoLinkUrl = "#",
   illustrationImageSrc = illustration,
-  headingText = "Sign Up For Treact",
-  socialButtons = [
-    {
-      iconImageSrc: googleIconImageSrc,
-      text: "Sign Up With Google",
-      url: "https://google.com"
-    },
-    // {
-    //   iconImageSrc: twitterIconImageSrc,
-    //   text: "Sign Up With Twitter",
-    //   url: "https://twitter.com"
-    // }
-  ],
+  headingText = "Se connecter",
   submitButtonText = "Se connecter",
   SubmitButtonIcon = LoginIcon,
-  tosUrl = "#",
-  privacyPolicyUrl = "#",
   signInUrl = "login",
-  forgotPasswordUrl = "#",
-
+  forgotPasswordUrl = "/forgot-password"
 }) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
   
     try {
@@ -101,13 +89,11 @@ const Login = ({
       );
   
       if (response.status === 200 || response.status === 201) {
-        const { token, user } = response.data; // Assuming user details are included in response
+        const { token, user } = response.data;
         
-        // Store token and user info in localStorage
         localStorage.setItem('authToken', token);
-        localStorage.setItem('user', JSON.stringify(user)); // Storing user as JSON string
+        localStorage.setItem('user', JSON.stringify(user));
   
-        // Redirect user to homepage
         navigate("/");
       }
   
@@ -115,6 +101,9 @@ const Login = ({
       if (error.response) {
         const serverError = error.response.data;
         setError(serverError.message || "An unknown error occurred. Please try again.");
+        if (serverError.errors) {
+          setFieldErrors(serverError.errors);
+        }
       } else {
         setError("Unable to connect to the server. Please check your connection.");
       }
@@ -122,8 +111,6 @@ const Login = ({
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <AnimationRevealPage>
@@ -137,14 +124,12 @@ const Login = ({
               <Heading>{headingText}</Heading>
               <FormContainer>
                 <SocialButtonsContainer>
-                  {socialButtons.map((socialButton, index) => (
-                    <SocialButton key={index} href={socialButton.url}>
-                      <span className="iconContainer">
-                        <img src={socialButton.iconImageSrc} className="icon" alt="" />
-                      </span>
-                      <span className="text">{socialButton.text}</span>
-                    </SocialButton>
-                  ))}
+                  <SocialButton href="https://google.com">
+                    <span className="iconContainer">
+                      <img src={googleIconImageSrc} className="icon" alt="Google icon" />
+                    </span>
+                    <span className="text">Sign Up With Google</span>
+                  </SocialButton>
                 </SocialButtonsContainer>
                 <DividerTextContainer>
                   <DividerText>Ou connectez-vous avec votre e-mail ou votre identifiant</DividerText>
@@ -157,8 +142,11 @@ const Login = ({
                     required
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="identifiant"
+                    placeholder="Identifiant ou email"
+                    hasError={fieldErrors.identifier}
                   />
+                  {fieldErrors.identifier && <ErrorMessage>{fieldErrors.identifier[0]}</ErrorMessage>}
+                  
                   <Input
                     type="password"
                     id="password"
@@ -166,31 +154,28 @@ const Login = ({
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
+                    placeholder="Mot de passe"
+                    hasError={fieldErrors.password}
                   />
-                  <SubmitButton type="submit">
-                    <SubmitButtonIcon className="icon" />
-                    <span className="text">{submitButtonText}</span>
+                  {fieldErrors.password && <ErrorMessage>{fieldErrors.password[0]}</ErrorMessage>}
+
+                  {error && <ErrorMessage>{error}</ErrorMessage>}
+                  
+                  <SubmitButton type="submit" disabled={loading}>
+                    {loading ? "Connexion..." : <>
+                      <SubmitButtonIcon className="icon" />
+                      <span className="text">{submitButtonText}</span>
+                    </>}
                   </SubmitButton>
                 </Form>
-                {/* <p tw="mt-6 text-xs text-gray-600 text-center">
-                  I agree to abide by Treact's{" "}
-                  <a href={tosUrl} tw="border-b border-gray-500 border-dotted">
-                    Terms of Service
-                  </a>{" "}
-                  and its{" "}
-                  <a href={privacyPolicyUrl} tw="border-b border-gray-500 border-dotted">
-                    Privacy Policy
-                  </a>
-                </p> */}
                 <p tw="mt-8 text-sm text-gray-600 text-center">
-                Vous n'avez pas de compte ? 
-              <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
-              Inscrivez-vous
+                  Vous n'avez pas de compte ?{" "}
+                  <a href={signInUrl} tw="border-b border-gray-500 border-dotted">
+                    Inscrivez-vous
                   </a>
                 </p>
                 <p tw="mt-6 text-xs text-gray-600 text-center">
-                  <a href="/forgot-password" tw="border-b border-gray-500 border-dotted">
+                  <a href={forgotPasswordUrl} tw="border-b border-gray-500 border-dotted">
                     Mot de passe oublié ?
                   </a>
                 </p>

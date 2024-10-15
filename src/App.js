@@ -9,6 +9,8 @@ import Boutique from "components/Boutique.js";
 import './Boutique.css';
 import './ProductDetails.css';
 import './Checkout.css';
+import './App.css';
+
 
 // index.js or App.js
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +19,8 @@ import ProductDetails from "components/ProductDetails.js";
 import CheckoutFrom from "components/CheckoutForm.js";
 import ForgotPassword from "components/ForgotPassword.js";
 import ResetPassword from "components/ResetPassword.js";
+import Orders from "components/Admin/Orders.jsx";
+import Profile from "components/Admin/Profile.js";
 
 export default function App() {
   return (
@@ -33,6 +37,11 @@ export default function App() {
           <Route path="/checkout" element={<CheckoutFrom/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/dashboard" element={<Orders />} />
+          <Route path="/profile" element={<Profile />} />
+
+
+
 
         </Routes>
       </Router>

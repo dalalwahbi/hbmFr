@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { motion } from "framer-motion";
 import tw from "twin.macro";
 import styled from "styled-components";
@@ -6,7 +7,7 @@ import { css } from "styled-components/macro"; //eslint-disable-line
 
 import useAnimatedNavToggler from "../../helpers/useAnimatedNavToggler.js";
 
-import logo from "../../images/hbm logo.png";
+import logo from "../../images/hbm_logo-rm.png";
 import { ReactComponent as MenuIcon } from "feather-icons/dist/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "feather-icons/dist/icons/x.svg";
 
@@ -35,9 +36,12 @@ export const LogoLink = styled(NavLink)`
   ${tw`flex items-center font-black border-b-0 text-2xl! ml-0!`};
 
   img {
-    ${tw`w-10 mr-3`}
+    width: 130px; /* Set your desired width */
+    height: auto; /* Maintain aspect ratio */
+    ${tw`mr-3`} /* Tailwind margin right */
   }
 `;
+
 
 export const MobileNavLinksContainer = tw.nav`flex flex-1 items-center justify-between`;
 export const NavToggle = tw.button`
@@ -81,6 +85,8 @@ export default ({
   // New state to hold user info
   const [user, setUser] = useState(null);
 
+  const navigate = useNavigate(); // Use navigate for redirection
+
   // Check if user is logged in and retrieve info from localStorage
   useEffect(() => {
     const userData = localStorage.getItem('user'); // Get the user data from localStorage
@@ -88,6 +94,15 @@ export default ({
       setUser(JSON.parse(userData)); // Parse and set the user data in state
     }
   }, []);
+
+  // Function to handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Clear user data from localStorage
+    localStorage.removeItem('authToken'); // Optionally remove authToken or other info
+    setUser(null); // Reset the user state
+
+    navigate('/'); // Redirect to the home page
+  };
 
   // Default navigation links
   const defaultLinks = [
@@ -105,15 +120,18 @@ export default ({
           </UserButton>
           {dropdownOpen && (
             <DropdownMenu>
+              <NavLink href="/checkout" tw="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+              checkout
+              </NavLink>
+              <NavLink href="/dashboard" tw="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+              Dashboard
+              </NavLink>
               <NavLink href="/profile" tw="block px-4 py-2 text-gray-800 hover:bg-gray-200">
                 Profile
               </NavLink>
               <NavLink
-                href="/logout"
-                onClick={() => {
-                  localStorage.removeItem('user'); // Clear user data from localStorage on logout
-                  setUser(null); // Reset the user state
-                }}
+                href="#"
+                onClick={handleLogout} // Call the handleLogout function on click
                 tw="block px-4 py-2 text-gray-800 hover:bg-gray-200"
               >
                 Logout
@@ -137,8 +155,8 @@ export default ({
 
   const defaultLogoLink = (
     <LogoLink href="/">
-      <img src={logo} alt="logo" />
-    </LogoLink>
+<img src={logo} alt="logo" width={1000} height={1000} />
+</LogoLink>
   );
 
   logoLink = logoLink || defaultLogoLink;
